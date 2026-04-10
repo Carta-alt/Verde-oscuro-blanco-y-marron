@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Mesa Urbana · Oliva</title>
+  <meta name="description" content="Carta digital demo · paleta natural, mediterránea y fresca" />
+  <style>
+    :root {
+      --bg: linear-gradient(180deg, #E6EFE6 0%, #D5E5D5 45%, #F5F1E8 100%);
+      --surface: rgba(252, 255, 251, 0.82);
+      --surface-2: #eef5ef;
+      --text: #18211d;
+      --muted: #607066;
+      --primary: #1F4D3A;
+      --secondary: #FFFFFF;
+      --accent: #6B4F3A;
+      --hero: linear-gradient(135deg,#17392c 0%,#1F4D3A 54%,#6B4F3A 100%);
+      --hero-ink: #f7fffb;
+      --line: rgba(31,77,58,.12);
+      --price-bg: rgba(31,77,58,.10);
+      --pill-bg: rgba(255,255,255,.13);
+      --card-radius: 28px;
+      --btn-radius: 999px;
+      --panel-radius: 32px;
+      --card-style: linear-gradient(180deg,#6B4F3A,#1F4D3A);
+      --shadow: 0 24px 54px rgba(31,77,58,.12);
+      --shadow-soft: 0 12px 28px rgba(31,77,58,.06);
+      --section-transform: none;
+      --section-spacing: 0;
+      --btn-bg: linear-gradient(135deg,#1F4D3A,#17392c);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    a { color: inherit; text-decoration: none; }
+    .container {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      display:flex;
+      flex-direction:column;
+      gap: 3px;
+    }
+    .brand-kicker {
+      font-size:.74rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color: var(--muted);
+      font-weight:800;
+    }
+    .brand-name {
+      font-size:1rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+    .call-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      border:none;
+      cursor:pointer;
+      padding:13px 18px;
+      border-radius: var(--btn-radius);
+      background: var(--btn-bg);
+      color: white;
+      font-weight:800;
+      box-shadow: var(--shadow-soft);
+      transition: transform .2s ease, box-shadow .25s ease;
+    }
+    .call-btn:hover, .menu-link:hover, .product-card:hover, .hero-cta:hover, .floating-call:hover {
+      transform: translateY(-2px);
+    }
+    .hero {
+      padding: 34px 0 16px;
+    }
+    .hero-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 0 0 34px 34px;
+      background: var(--hero);
+      color: var(--hero-ink);
+      box-shadow: var(--shadow);
+    }
+    .hero-shell::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 16% 22%, rgba(255,255,255,.16) 0 12%, transparent 12.5%),
+        radial-gradient(circle at 83% 18%, rgba(255,255,255,.10) 0 11%, transparent 11.5%),
+        linear-gradient(140deg, transparent 0 60%, rgba(255,255,255,.07) 60% 66%, transparent 66% 100%);
+      pointer-events:none;
+    }
+    .hero-inner {
+      position:relative;
+      z-index:1;
+      padding: 50px 22px 42px;
+      min-height: 400px;
+      display:grid;
+      align-items:end;
+    }
+    .eyebrow {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      background:var(--pill-bg);
+      border:1px solid rgba(255,255,255,.14);
+      font-size:.82rem;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:800;
+    }
+    h1 {
+      margin:18px 0 10px;
+      font-size: clamp(2.4rem, 7vw, 4.9rem);
+      line-height:.95;
+      letter-spacing:-.05em;
+      max-width: 760px;
+    }
+    .hero p {
+      margin:0;
+      max-width: 670px;
+      line-height:1.7;
+      color: rgba(255,255,255,.88);
+      font-size: clamp(1rem, 2.3vw, 1.14rem);
+    }
+    .hero-actions {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top: 24px;
+    }
+    .hero-cta {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:15px 20px;
+      border-radius: var(--btn-radius);
+      font-weight:800;
+      transition: transform .2s ease, box-shadow .25s ease;
+    }
+    .hero-cta.primary {
+      background: rgba(255,255,255,.96);
+      color: var(--primary);
+      box-shadow: 0 14px 30px rgba(0,0,0,.12);
+    }
+    .hero-cta.secondary {
+      background: rgba(255,255,255,.12);
+      color: white;
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(8px);
+    }
+    .hero-pills {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top: 22px;
+    }
+    .hero-pill {
+      padding:10px 13px;
+      border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
+      font-size:.92rem;
+    }
+    .intro-panel {
+      margin-top: -30px;
+      position: relative;
+      z-index: 2;
+    }
+    .intro-card {
+      background: var(--surface);
+      border:1px solid var(--line);
+      border-radius: var(--panel-radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+    .intro-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+      letter-spacing: -.03em;
+    }
+    .intro-card p {
+      margin:0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .menu-nav-wrap {
+      position: sticky;
+      top: 72px;
+      z-index: 30;
+      padding: 14px 0 0;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 86%, transparent), transparent);
+      backdrop-filter: blur(6px);
+    }
+    .menu-nav {
+      display:flex;
+      gap:10px;
+      overflow:auto;
+      padding-bottom: 10px;
+      scrollbar-width: none;
+    }
+    .menu-nav::-webkit-scrollbar { display:none; }
+    .menu-link {
+      white-space: nowrap;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: var(--surface);
+      border:1px solid var(--line);
+      color: var(--muted);
+      font-weight: 800;
+      font-size: .94rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform .2s ease, background .25s ease, color .25s ease;
+    }
+    .menu-link.active {
+      background: var(--btn-bg);
+      color: white;
+      border-color: transparent;
+    }
+    main {
+      padding: 14px 0 58px;
+    }
+    .section {
+      padding: 26px 0 8px;
+      scroll-margin-top: 150px;
+    }
+    .section-head {
+      margin-bottom: 16px;
+    }
+    .section-kicker {
+      display:inline-flex;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      color: var(--primary);
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .section-title {
+      margin:0 0 8px;
+      font-size: clamp(1.65rem, 4vw, 2.4rem);
+      letter-spacing: var(--section-spacing);
+      text-transform: var(--section-transform);
+    }
+    .section-desc {
+      margin:0;
+      color: var(--muted);
+      line-height:1.65;
+      max-width: 700px;
+    }
+    .products {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .product-card {
+      position:relative;
+      overflow:hidden;
+      background: var(--surface);
+      border-radius: var(--card-radius);
+      border:1px solid var(--line);
+      box-shadow: var(--shadow-soft);
+      padding: 18px;
+      transition: transform .22s ease, box-shadow .25s ease;
+    }
+    .product-card::before {
+      content:"";
+      position:absolute;
+      inset:0 auto 0 0;
+      width:6px;
+      background: var(--card-style);
+    }
+    .product-top {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:8px;
+    }
+    .product-name {
+      margin:0;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+    .price {
+      flex:0 0 auto;
+      padding:9px 12px;
+      border-radius:999px;
+      background: var(--price-bg);
+      color: var(--primary);
+      font-weight:800;
+      font-size:.94rem;
+      min-width:72px;
+      text-align:center;
+    }
+    .product-desc {
+      margin:0 0 12px;
+      color: var(--muted);
+      line-height:1.6;
+      font-size:.95rem;
+    }
+    .product-meta {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .chip {
+      padding:8px 10px;
+      border-radius:999px;
+      background: color-mix(in srgb, var(--surface-2) 72%, white);
+      color: var(--muted);
+      font-size:.82rem;
+      border:1px solid var(--line);
+    }
+    .footer-card {
+      background: var(--surface);
+      border:1px solid var(--line);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      display:grid;
+      gap:18px;
+    }
+    .footer-head h3 {
+      margin:0 0 8px;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      letter-spacing:-.03em;
+    }
+    .footer-head p {
+      margin:0;
+      color: var(--muted);
+      line-height:1.7;
+    }
+    .footer-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    .footer-box {
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      background: color-mix(in srgb, var(--surface-2) 76%, white);
+    }
+    .footer-label {
+      font-size:.78rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color: var(--muted);
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .footer-value {
+      font-size:1rem;
+      font-weight:700;
+      line-height:1.5;
+    }
+    .footer-bottom {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      color: var(--muted);
+      font-size:.92rem;
+    }
+    .floating-call {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 50;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 15px 18px;
+      border-radius:999px;
+      background: var(--btn-bg);
+      color: white;
+      font-weight:800;
+      box-shadow: 0 16px 34px rgba(0,0,0,.18);
+      transition: transform .2s ease, box-shadow .25s ease;
+    }
+    .phone-dot {
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:#25D366;
+      box-shadow:0 0 0 4px rgba(255,255,255,.14);
+      flex:0 0 auto;
+    }
+    @media (min-width: 760px) {
+      .hero-inner { padding: 58px 28px 46px; min-height: 450px; }
+      .products { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(3, 1fr); }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+    @media (min-width: 980px) {
+      .products { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" id="top">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <span class="brand-kicker">Demo comercial</span>
+        <span class="brand-name">La Mesa Urbana</span>
+      </div>
+      <a class="call-btn" href="tel:608456342" aria-label="Llamar al 608456342">Llamar · 608 456 342</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-shell">
+        <div class="hero-inner">
+          <div>
+            <span class="eyebrow">Paleta 3 · Verde oscuro · Blanco · Marrón</span>
+            <h1>Una carta fresca y natural con aire mediterráneo.</h1>
+            <p>Una versión equilibrada y acogedora, ideal para conceptos que quieren comunicar frescura, bienestar o producto natural.</p>
+            <div class="hero-actions">
+              <a class="hero-cta primary" href="#entrantes">Ver carta</a>
+              <a class="hero-cta secondary" href="tel:608456342">Llamar ahora</a>
+            </div>
+            <div class="hero-pills">
+              <span class="hero-pill">Diseño simple</span>
+              <span class="hero-pill">Sin imágenes</span>
+              <span class="hero-pill">Referencia comercial</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro-panel">
+    <div class="container">
+      <div class="intro-card">
+        <h2>Estilo 3 · Oliva</h2>
+        <p>Estilo 3 · Oliva. Paleta verde oscuro, blanco y marrón. Aporta sensación natural, mediterránea y saludable, muy útil para propuestas orgánicas o de cocina fresca.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="menu-nav-wrap">
+    <div class="container">
+      <nav class="menu-nav" aria-label="Categorías de la carta">
+        <a class="menu-link active" href="#entrantes">Entrantes</a>
+        <a class="menu-link" href="#hamburguesas">Hamburguesas</a>
+        <a class="menu-link" href="#pizzas">Pizzas</a>
+        <a class="menu-link" href="#bebidas">Bebidas</a>
+        <a class="menu-link" href="#postres">Postres</a>
+      </nav>
+    </div>
+  </div>
+
+  <main>
+    <div class="container">
+      <section class="section" id="entrantes">
+        <div class="section-head">
+          <span class="section-kicker">Para empezar</span>
+          <h2 class="section-title">Entrantes</h2>
+          <p class="section-desc">Pequeños platos con buena presencia, pensados para compartir y abrir el apetito.</p>
+        </div>
+        <div class="products">
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Croquetas cremosas de jamón ibérico</h3>
+              <span class="price">8,90 €</span>
+            </div>
+            <p class="product-desc">Bechamel suave, rebozado fino y acabado crujiente al momento.</p>
+            <div class="product-meta"><span class="chip">Casero</span><span class="chip">Muy pedido</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Patatas trufadas con parmesano</h3>
+              <span class="price">7,50 €</span>
+            </div>
+            <p class="product-desc">Patata crujiente con salsa suave de trufa y lluvia de parmesano curado.</p>
+            <div class="product-meta"><span class="chip">Para compartir</span><span class="chip">Top ventas</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Provolone al horno</h3>
+              <span class="price">9,20 €</span>
+            </div>
+            <p class="product-desc">Queso fundido, tomate especiado y pan tostado con aceite de ajo.</p>
+            <div class="product-meta"><span class="chip">Vegetariano</span><span class="chip">Horno</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Tiras de pollo crispy</h3>
+              <span class="price">8,40 €</span>
+            </div>
+            <p class="product-desc">Pollo marinado y rebozado crujiente con salsa miel-mostaza.</p>
+            <div class="product-meta"><span class="chip">Crujiente</span><span class="chip">Favorito</span></div>
+          </article>
+</div></section>
+<section class="section" id="hamburguesas">
+        <div class="section-head">
+          <span class="section-kicker">Firma de la casa</span>
+          <h2 class="section-title">Hamburguesas</h2>
+          <p class="section-desc">Recetas con personalidad, pan brioche y combinaciones muy comerciales.</p>
+        </div>
+        <div class="products">
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Smash Urbana</h3>
+              <span class="price">12,90 €</span>
+            </div>
+            <p class="product-desc">Doble carne smash, cheddar madurado, cebolla plancha y salsa secreta.</p>
+            <div class="product-meta"><span class="chip">Smash burger</span><span class="chip">Best seller</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">La Trufada</h3>
+              <span class="price">13,80 €</span>
+            </div>
+            <p class="product-desc">Carne premium, queso suizo, rúcula fresca y mayonesa de trufa.</p>
+            <div class="product-meta"><span class="chip">Premium</span><span class="chip">Gourmet</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">BBQ de la Plaza</h3>
+              <span class="price">13,40 €</span>
+            </div>
+            <p class="product-desc">Bacon ahumado, cheddar, cebolla crispy y salsa barbacoa casera.</p>
+            <div class="product-meta"><span class="chip">Intensa</span><span class="chip">Con bacon</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Mediterránea Veggie</h3>
+              <span class="price">11,90 €</span>
+            </div>
+            <p class="product-desc">Burger vegetal, tomate seco, queso de cabra y pesto suave.</p>
+            <div class="product-meta"><span class="chip">Vegetariana</span><span class="chip">Ligera</span></div>
+          </article>
+</div></section>
+<section class="section" id="pizzas">
+        <div class="section-head">
+          <span class="section-kicker">Horno</span>
+          <h2 class="section-title">Pizzas</h2>
+          <p class="section-desc">Bases finas, combinaciones conocidas y recetas con aspecto vendible.</p>
+        </div>
+        <div class="products">
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Margherita Cremosa</h3>
+              <span class="price">10,50 €</span>
+            </div>
+            <p class="product-desc">Tomate italiano, mozzarella fior di latte y albahaca fresca.</p>
+            <div class="product-meta"><span class="chip">Clásica</span><span class="chip">Horno</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Prosciutto & Burrata</h3>
+              <span class="price">13,90 €</span>
+            </div>
+            <p class="product-desc">Jamón curado, rúcula y burrata cremosa al salir del horno.</p>
+            <div class="product-meta"><span class="chip">Premium</span><span class="chip">Muy visual</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Barbacoa Ahumada</h3>
+              <span class="price">12,80 €</span>
+            </div>
+            <p class="product-desc">Pollo, bacon, cebolla morada y salsa barbacoa suave.</p>
+            <div class="product-meta"><span class="chip">Popular</span><span class="chip">Ahumada</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Pepperoni Picante</h3>
+              <span class="price">12,20 €</span>
+            </div>
+            <p class="product-desc">Tomate, mozzarella, pepperoni y aceite de chile suave.</p>
+            <div class="product-meta"><span class="chip">Con carácter</span><span class="chip">Picante</span></div>
+          </article>
+</div></section>
+<section class="section" id="bebidas">
+        <div class="section-head">
+          <span class="section-kicker">Acompañamiento</span>
+          <h2 class="section-title">Bebidas</h2>
+          <p class="section-desc">Opciones sencillas y realistas para completar la demo comercial.</p>
+        </div>
+        <div class="products">
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Refrescos clásicos</h3>
+              <span class="price">2,80 €</span>
+            </div>
+            <p class="product-desc">Cola, limón, naranja o zero. Servidos bien fríos.</p>
+            <div class="product-meta"><span class="chip">33 cl</span><span class="chip">Frío</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Cerveza bien tirada</h3>
+              <span class="price">3,20 €</span>
+            </div>
+            <p class="product-desc">Rubia suave de barril con espuma cremosa.</p>
+            <div class="product-meta"><span class="chip">Grifo</span><span class="chip">Muy fría</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Limonada casera</h3>
+              <span class="price">3,70 €</span>
+            </div>
+            <p class="product-desc">Limón fresco, hierbabuena y punto justo de dulzor.</p>
+            <div class="product-meta"><span class="chip">Casera</span><span class="chip">Muy fresca</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Copa de vino de la casa</h3>
+              <span class="price">3,80 €</span>
+            </div>
+            <p class="product-desc">Tinto suave o blanco afrutado, según elección.</p>
+            <div class="product-meta"><span class="chip">Por copa</span><span class="chip">Bodega</span></div>
+          </article>
+</div></section>
+<section class="section" id="postres">
+        <div class="section-head">
+          <span class="section-kicker">Cierre dulce</span>
+          <h2 class="section-title">Postres</h2>
+          <p class="section-desc">Postres conocidos y apetecibles, perfectos para una carta moderna.</p>
+        </div>
+        <div class="products">
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Tarta de queso horneada</h3>
+              <span class="price">6,20 €</span>
+            </div>
+            <p class="product-desc">Textura cremosa, centro jugoso y mermelada suave de frutos rojos.</p>
+            <div class="product-meta"><span class="chip">Top ventas</span><span class="chip">Cremosa</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Brownie templado con helado</h3>
+              <span class="price">5,90 €</span>
+            </div>
+            <p class="product-desc">Chocolate intenso, nuez tostada y helado de vainilla.</p>
+            <div class="product-meta"><span class="chip">Chocolate</span><span class="chip">Clásico</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Tiramisú suave de la casa</h3>
+              <span class="price">5,80 €</span>
+            </div>
+            <p class="product-desc">Crema ligera de mascarpone, café y cacao puro.</p>
+            <div class="product-meta"><span class="chip">Italiano</span><span class="chip">Muy pedido</span></div>
+          </article>
+<article class="product-card">
+            <div class="product-top">
+              <h3 class="product-name">Cookie skillet</h3>
+              <span class="price">6,50 €</span>
+            </div>
+            <p class="product-desc">Galleta caliente al horno con chocolate fundido y helado encima.</p>
+            <div class="product-meta"><span class="chip">Para compartir</span><span class="chip">Muy visual</span></div>
+          </article>
+</div></section>
+      <footer class="footer">
+        <div class="footer-card">
+          <div class="footer-head">
+            <h3>Una carta simple con una identidad visual muy clara.</h3>
+            <p>Esta versión está pensada para enseñar un estilo concreto a restaurantes. Se puede adaptar con sus platos, precios, logo, horario y tono de marca.</p>
+          </div>
+          <div class="footer-grid">
+            <div class="footer-box">
+              <div class="footer-label">Teléfono</div>
+              <div class="footer-value">608 456 342</div>
+            </div>
+            <div class="footer-box">
+              <div class="footer-label">Horario demo</div>
+              <div class="footer-value">Lun - Dom<br>13:00 - 16:00 · 20:00 - 23:30</div>
+            </div>
+            <div class="footer-box">
+              <div class="footer-label">Uso</div>
+              <div class="footer-value">Plantilla de referencia para enseñar diseño y color al restaurante.</div>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <span>La Mesa Urbana · Estilo 3 · Oliva</span>
+            <a class="call-btn" href="tel:608456342" aria-label="Llamar al 608456342">Llamar · 608 456 342</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <a class="floating-call" href="tel:608456342" aria-label="Llamar al 608456342">
+    <span class="phone-dot"></span>
+    608 456 342
+  </a>
+
+  <script>
+    const links = document.querySelectorAll('.menu-link');
+    const sections = [...document.querySelectorAll('.section')];
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          links.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
+          });
+        }
+      });
+    }, {
+      rootMargin: '-25% 0px -60% 0px',
+      threshold: 0.1
+    });
+
+    sections.forEach(section => observer.observe(section));
+
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        links.forEach(item => item.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
